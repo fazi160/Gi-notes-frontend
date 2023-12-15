@@ -15,6 +15,8 @@ const customStyles = {
 };
 
 const App = () => {
+  const baseUrl = process.env.REACT_APP_BASE_URL;
+
   const [notes, setNotes] = useState([]);
   const [editingNote, setEditingNote] = useState(null);
   const [selectedNote, setSelectedNote] = useState(null);
@@ -25,7 +27,7 @@ const App = () => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/notes/');
+        const response = await axios.get(`${baseUrl}/`);
         setNotes(response.data);
       } catch (error) {
         console.error('Error fetching notes:', error);
@@ -37,7 +39,7 @@ const App = () => {
 
   const deleteNote = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/notes/${id}/`);
+      await axios.delete(`${baseUrl}/${id}/`);
       setNotes(notes.filter((note) => note.id !== id));
     } catch (error) {
       console.error('Error deleting note:', error);
@@ -52,7 +54,7 @@ const App = () => {
   const handleAddNote = async () => {
     if (noteTitle.trim() !== '' && noteBody.trim() !== '') {
       try {
-        const response = await axios.post('http://127.0.0.1:8000/notes/', {
+        const response = await axios.post(`${baseUrl}/`, {
           title: noteTitle,
           body: noteBody,
         });
@@ -80,7 +82,7 @@ const App = () => {
     if (selectedNote) {
       try {
         const response = await axios.put(
-          `http://127.0.0.1:8000/notes/${selectedNote.id}/`,
+          `${baseUrl}/${selectedNote.id}/`,
           {
             title: noteTitle || selectedNote.title,
             body: noteBody || selectedNote.body,
