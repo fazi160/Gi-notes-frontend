@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import Swal from "sweetalert2";
 
 const NoteDetail = () => {
   const navigate = useNavigate();
@@ -13,10 +14,17 @@ const NoteDetail = () => {
   const baseUrl = process.env.REACT_APP_BASE_URL;
 
   const deleteNoteWithConfirmation = async (id) => {
-    const confirmation = window.confirm(
-      "Are you sure you want to delete this note?"
-    );
-    if (confirmation) {
+    const confirmation = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (confirmation.isConfirmed) {
       try {
         await axios.delete(`${baseUrl}/${id}/`);
         console.log("Note deleted successfully");
